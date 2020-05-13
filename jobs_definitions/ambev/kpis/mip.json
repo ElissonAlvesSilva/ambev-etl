@@ -1,0 +1,12 @@
+[
+  {
+      "name" : "show_all",
+      "kpi_name": "showAll",
+      "api": "ambev-mip",
+      "datatype": "rawdata",
+      "previous_jobs" : ["insert_mip"],
+      "query": "
+          SELECT * FROM mip_base
+      "
+  }
+]

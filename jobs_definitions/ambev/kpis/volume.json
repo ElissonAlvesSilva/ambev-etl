@@ -1,0 +1,12 @@
+[
+  {
+      "name" : "show_all_volume",
+      "kpi_name": "showAllVolume",
+      "api": "ambev-volume",
+      "datatype": "rawdata",
+      "previous_jobs" : ["insert_volume"],
+      "query": "
+          SELECT * FROM volume_base
+      "
+  }
+]

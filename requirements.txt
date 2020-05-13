@@ -1,0 +1,9 @@
+python-graph-core==1.8.2            # create graph
+python-graph-dot==1.8.2             # create graph
+argparse==1.4.0                     # read args
+pymysql==0.7.2                       # connect with hive
+thrift==0.11.0                      # connect with hive
+requests==2.22.0                    # connect with api
+sqlparse==0.3.0                     # pretty print of SQL statement
+simplejson==3.3.2                   # to use json
+pylint==2.3.1

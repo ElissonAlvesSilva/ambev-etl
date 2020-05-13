@@ -1,0 +1,54 @@
+[
+  {
+      "name": "insert_mip",
+      "action": "insert",
+      "table_name": "mip_base",
+      "schema": "(doc, kernel, cost_control, qty_amount, value_obj, created_at)",
+      "query": "
+        SELECT
+          doc, kernel, cost_control, qty_amount, value_obj, created_at
+        FROM (
+          SELECT m.doc AS doc, k.key AS kernel, m.cost_control, m.qty_amount, m.value_obj,
+          m.created_at
+          FROM
+            mip as m
+          INNER JOIN
+            kernel as k
+          ON
+            m.kernel_id = k.id
+          WHERE
+            m.created_at >= '{start_date}' AND
+            m.created_at <= '{end_date}'
+        ) t
+      "
+  },
+  {
+    "name": "insert_volume",
+    "action": "insert",
+    "schema": "(kernel, line, version, created_at, product, volume_pc, um, qty_amount, volume_hl, resource)",
+    "table_name": "volume_base",
+    "query": "
+      SELECT 
+        kernel, line, version, created_at, product, volume_pc, um, qty_amount, volume_hl, resource
+      FROM (
+        SELECT
+          k.key AS kernel, v.line, v.version, v.created_at, p.key AS product, v.volume_pc,
+          v.um, v.qty_amount, v.volume_hl, v.resource
+        FROM 
+          volume AS v
+        INNER JOIN 
+          kernel AS k
+        ON 
+          v.kernel_id = k.id
+        INNER JOIN
+          products AS p
+        ON
+          v.product_id = p.id
+        
+        WHERE
+          v.created_at >= '{start_date}' AND
+          v.created_at <= '{end_date}'
+      ) t
+    "
+  }
+]
