@@ -3,22 +3,36 @@
       "name": "insert_mip",
       "action": "insert",
       "table_name": "mip_base",
-      "schema": "(doc, kernel, cost_control, qty_amount, value_obj, created_at)",
+      "schema": "(doc, kernel, user, material, description, uml, cost_center, cost_control, qty_amount, value_obj, created_at)",
       "query": "
         SELECT
-          doc, kernel, cost_control, qty_amount, value_obj, created_at
+          doc, kernel, user, material, description, uml, cost_center, cost_control, qty_amount, value_obj, created_at
         FROM (
-          SELECT m.doc AS doc, k.key AS kernel, m.cost_control, m.qty_amount, m.value_obj,
-          m.created_at
+          SELECT m.doc AS doc, k.key AS kernel, u.key AS user, mt.key AS material, mt.description AS description,
+          (CASE WHEN m.material_id IS NULL THEN 'SV' ELSE mt.uml END) as uml,
+          cc.key AS cost_center, m.cost_control AS cost_control, m.qty_amount, m.value_obj, m.created_at
           FROM
             mip as m
           INNER JOIN
             kernel as k
           ON
             m.kernel_id = k.id
+          INNER JOIN
+            users as u
+          ON
+            m.user_id = u.id
+          LEFT OUTER JOIN
+            materials as mt
+          ON
+            m.material_id = mt.id
+          INNER JOIN
+            cost_center as cc
+          ON
+            m.cost_center_id = cc.id          
           WHERE
             m.created_at >= '{start_date}' AND
             m.created_at <= '{end_date}'
+            
         ) t
       "
   },
@@ -49,6 +63,26 @@
           v.created_at >= '{start_date}' AND
           v.created_at <= '{end_date}'
       ) t
+    "
+  },
+  {
+    "name": "source_mip",
+    "previous_jobs": ["insert_mip"],
+    "query": "
+        SELECT
+            *
+        FROM
+            mip_base
+    "
+  },
+  {
+    "name": "source_volume",
+    "previous_jobs": ["insert_volume"],
+    "query": "
+        SELECT
+            *
+        FROM
+            volume_base
     "
   }
 ]

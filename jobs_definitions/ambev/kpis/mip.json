@@ -1,12 +1,96 @@
 [
   {
-      "name" : "show_all",
-      "kpi_name": "showAll",
-      "api": "ambev-mip",
-      "datatype": "rawdata",
-      "previous_jobs" : ["insert_mip"],
-      "query": "
-          SELECT * FROM mip_base
-      "
+    "name" : "top_users_most_spent",
+    "kpi_name": "topUsersMostSpent",
+    "api": "ambev-mip",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_mip"],
+    "query": "
+      SELECT 
+        user, SUM(value_obj) as total_spent
+      FROM
+        {source_mip}
+      GROUP BY
+        user
+    "
+  },
+  {
+    "name" : "top_users_most_used_material",
+    "kpi_name": "topUsersMostUsedMaterial",
+    "api": "ambev-mip",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_mip"],
+    "query": "
+      SELECT 
+        user, SUM(qty_amount) as total_amount
+      FROM
+        {source_mip}
+      GROUP BY
+        user
+    "
+  },
+  {
+    "name" : "top_users_most_used_sv",
+    "kpi_name": "topUsersMostUsedSV",
+    "api": "ambev-mip",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_mip"],
+    "query": "
+      SELECT 
+        user, COUNT(material) as total
+      FROM
+        {source_mip}
+      WHERE 
+        material IS NULL
+      GROUP BY
+        user
+    "
+  },
+  {
+    "name" : "top_materials_most_used",
+    "kpi_name": "topMaterialsMostUsed",
+    "api": "ambev-mip",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_mip"],
+    "query": "
+      SELECT 
+        material, COUNT(material) as total
+      FROM
+        {source_mip}
+      WHERE 
+        material IS NOT NULL
+      GROUP BY
+        material
+    "
+  },
+  {
+    "name" : "value_total_per_material",
+    "kpi_name": "valueTotalPerMaterial",
+    "api": "ambev-mip",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_mip"],
+    "query": "
+      SELECT 
+        material, SUM(value_obj) as total
+      FROM
+        {source_mip}
+      GROUP BY
+        material
+    "
+  },
+  {
+    "name" : "qty_total_per_material",
+    "kpi_name": "QuantityTotalPerMaterial",
+    "api": "ambev-mip",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_mip"],
+    "query": "
+      SELECT 
+        material, SUM(qty_amount) as total
+      FROM
+        {source_mip}
+      GROUP BY
+        material
+    "
   }
 ]
