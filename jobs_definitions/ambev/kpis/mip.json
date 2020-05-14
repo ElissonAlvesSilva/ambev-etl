@@ -7,11 +7,12 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, SUM(value_obj) as total_spent
+        user, created_at, SUM(value_obj) as total_spent
       FROM
         {source_mip}
       GROUP BY
-        user
+        user,
+        created_at
     "
   },
   {
@@ -22,11 +23,12 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, SUM(qty_amount) as total_amount
+        user, created_at, SUM(qty_amount) as total_amount
       FROM
         {source_mip}
       GROUP BY
-        user
+        user,
+        created_at
     "
   },
   {
@@ -37,13 +39,14 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, COUNT(material) as total
+        user, created_at, COUNT(material) as total
       FROM
-        {source_mip}
+        ambev_etl_source_mip_temp
       WHERE 
         material IS NULL
       GROUP BY
-        user
+        user,
+        created_at
     "
   },
   {
@@ -54,13 +57,13 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        material, COUNT(material) as total
+        material, created_at, COUNT(material) as total
       FROM
         {source_mip}
       WHERE 
         material IS NOT NULL
       GROUP BY
-        material
+        material, created_at
     "
   },
   {
@@ -71,11 +74,12 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        material, SUM(value_obj) as total
+        material, created_at, SUM(value_obj) as total
       FROM
         {source_mip}
       GROUP BY
-        material
+        material,
+        created_at
     "
   },
   {
@@ -86,11 +90,12 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        material, SUM(qty_amount) as total
+        material,created_at, SUM(qty_amount) as total
       FROM
         {source_mip}
       GROUP BY
-        material
+        material,
+        created_at
     "
   }
 ]

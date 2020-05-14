@@ -1,12 +1,62 @@
 [
   {
-      "name" : "show_all_volume",
-      "kpi_name": "showAllVolume",
-      "api": "ambev-volume",
-      "datatype": "rawdata",
-      "previous_jobs" : ["insert_volume"],
-      "query": "
-          SELECT * FROM volume_base
-      "
+    "name" : "top_kernel_production",
+    "kpi_name": "topKernelProduction",
+    "api": "ambev-volume",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_volume"],
+    "query": "
+      SELECT 
+        kernel,
+        created_at,
+        SUM(volume_pc) AS total_pc,
+        SUM(qty_amount) AS total_qty,
+        SUM(volume_hl) AS total_hl
+      FROM 
+        {source_volume}
+      GROUP BY
+        kernel,
+        created_at
+    "
+  },
+  {
+    "name" : "top_line_per_kernel_production",
+    "kpi_name": "topLinePerKernekProduction",
+    "api": "ambev-volume",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_volume"],
+    "query": "
+      SELECT 
+        kernel,
+        line,
+        created_at,
+        SUM(volume_pc) AS total_pc,
+        SUM(qty_amount) AS total_qty,
+        SUM(volume_hl) AS total_hl
+      FROM 
+        {source_volume}
+        GROUP BY
+        kernel,
+        line,
+        created_at
+    "
+  },
+  {
+    "name" : "top_produced_products",
+    "kpi_name": "topProducedProducts",
+    "api": "ambev-volume",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_volume"],
+    "query": "
+      SELECT 
+        product,
+        created_at,
+        SUM(qty_amount) AS total_qty
+      FROM 
+        {source_volume}
+      GROUP BY
+        product,
+        created_at
+    "
   }
 ]

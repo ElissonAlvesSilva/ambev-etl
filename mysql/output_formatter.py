@@ -22,9 +22,12 @@ class OutputFormatter():
     self.datatype = datatype
 
   def to_json_collections(self):
-    result_date_field = self._add_date_field(self.data)
-    result = self._remove_none(result_date_field)
-    return result
+    if self.data != []:
+      result_date_field = self._add_date_field(self.data)
+      result_rm_none = self._remove_none(result_date_field)
+      result = self._add_structure_per_group(result_rm_none)
+      return result
+    return []
   
   def _remove_none(self, collection):
     results = []
@@ -44,14 +47,13 @@ class OutputFormatter():
     for item in collection:
       if 'created_at' in item:
         date = item['created_at']
-        item['date'] = date.strftime("%Y-%m-%d")
-        item.pop('created_at')
+        item['created_at'] = date.strftime("%Y-%m-%d")
       else:
         try:
           item_date = datetime(int(item['year']), int(item['month']), int(item['day']))
-          item['date'] = item_date.strftime("%Y-%m-%d")
+          item['created_at'] = item_date.strftime("%Y-%m-%d")
         except KeyError:
-          item['date'] = "temp"
+          item['created_at'] = "temp"
         except TypeError:
           count_errors += 1
           continue
@@ -59,8 +61,42 @@ class OutputFormatter():
           count_errors += 1
           continue
       results.append(item)
-    Log.Instance().appendFinalReport("Error parsing date field. Count: %s" %(count_errors))
+    Log.Instance().appendFinalReport("Error parsing created_at field. Count: %s" %(count_errors))
     return results
+
+  def _group_by_kpi_name(self, collections): 
+    grouped_results = []
+    collection = dict()
+    for item in collections:
+      if self.kpi_name not in item['elt_data']:
+        collection[self.kpi_name] = [item]
+      else:
+        collection[self.kpi_name].append(item)
+      grouped_results.append(collection)
+    return grouped_results
+  
+  def _add_structure_per_group(self, grouped_results):
+    collections = []
+    for item in grouped_results:
+      collection = self._create_collection(item)
+      collections.append(collection)
+    return collections
+
+  def _create_collection(self, item):
+    collection = {
+      "etl_data": item,
+      "etl_meta": {
+        "timestamp": item['created_at'],
+        "label": self.name,
+        "is_kpi": self.is_kpi,
+        "datatype": self.datatype,
+        "api": self.api,
+        "kpi_name": self.kpi_name
+      }
+    }
+    return collection
+
+  
 
   def generate_message(self):
     message = "===========================================\n\n"

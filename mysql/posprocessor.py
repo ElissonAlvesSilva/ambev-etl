@@ -19,18 +19,28 @@ class PosProcessor:
 
     def run(self, collections):
         Log.Instance().appendFinalReport("\nStarting POSPROCESSING stage...\n===================")
-        Log.Instance().append("Posprocessing...")
-        processed_collections = {}
-        processed_collections['etl_data'] = self._process_to_api_final_(collections)
-            
+        for collection in collections:
+          Log.Instance().append("Posprocessing " + collection['etl_meta']['label'] + "...")
+          lentemp = len(collection['etl_data'])
+          collection['etl_data'] = self._process_to_api_final_(collection)
+          result_log = "( " + collection['etl_meta']['label'] + ":" + str(lentemp)
+          result_log += " = " + collection['etl_meta']['label'] +\
+                        ":" + str(len(collection['etl_data'])) + " )"
+          Log.Instance().append(result_log)
         Log.Instance().appendFinalReport("===================\nPOSPROCESSING stage ended.")
-        return processed_collections
+        return collections
 
     def _process_to_api_final_(self, collection):
-        etl_data = { 'mip': [], 'volume': [] }
-        for item in collection:
-            if 'product' in item:
-                etl_data['volume'].append(item)
-            else:
-                etl_data['mip'].append(item)
-        return etl_data
+      if 'total' in collection['etl_data']:
+        collection['etl_data']['total'] = round(collection['etl_data']['total'], 2)
+      if 'total_spent' in collection['etl_data']:
+        collection['etl_data']['total_spent'] = round(collection['etl_data']['total_spent'], 2)
+      if 'total_amount' in collection['etl_data']:
+        collection['etl_data']['total_amount'] = round(collection['etl_data']['total_amount'], 2)
+      if 'total_pc' in collection['etl_data']:
+        collection['etl_data']['total_pc'] = round(collection['etl_data']['total_pc'], 2)
+      if 'total_qty' in collection['etl_data']:
+        collection['etl_data']['total_qty'] = round(collection['etl_data']['total_qty'], 2)
+      if 'total_hl' in collection['etl_data']:
+        collection['etl_data']['total_hl'] = round(collection['etl_data']['total_hl'], 2)
+      return collection
