@@ -24,5 +24,6 @@ class Writer:
                 filepath = Config.WORKDIRECTORY_FOR_TEMPS
             filepath = filepath.format(date=collection['etl_meta']['timestamp'][0:10])
             FileManager.create_if_dont_exist(filepath)
+            print(collection)
             FileManager.write_json_to_file(filepath, collection['etl_meta']['label'], collection)
         Log.Instance().appendFinalReport("===================\nWRITING stage ended.")

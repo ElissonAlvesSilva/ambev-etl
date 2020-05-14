@@ -24,8 +24,10 @@ class OutputFormatter():
   def to_json_collections(self):
     if self.data != []:
       result_date_field = self._add_date_field(self.data)
-      result_rm_none = self._remove_none(result_date_field)
-      result = self._add_structure_per_group(result_rm_none)
+      result_fix_field = self._fix_total_field(result_date_field)
+      result_rm_none = self._remove_none(result_fix_field)
+      result_group_by_kpi_name = self._group_kpi_name(result_rm_none)
+      result = self._add_structure_per_group(result_group_by_kpi_name)
       return result
     return []
   
@@ -63,30 +65,49 @@ class OutputFormatter():
       results.append(item)
     Log.Instance().appendFinalReport("Error parsing created_at field. Count: %s" %(count_errors))
     return results
-
-  def _group_by_kpi_name(self, collections): 
-    grouped_results = []
-    collection = dict()
-    for item in collections:
-      if self.kpi_name not in item['elt_data']:
-        collection[self.kpi_name] = [item]
-      else:
-        collection[self.kpi_name].append(item)
-      grouped_results.append(collection)
-    return grouped_results
   
+  def _fix_total_field(self, collections):
+    results = []
+    for item in collections:
+      if 'total' in item:
+        item['total'] = round(item['total'], 2)
+      if 'total_spent' in item:
+        item['total_spent'] = round(item['total_spent'], 2)
+      if 'total_amount' in item:
+        item['total_amount'] = round(item['total_amount'], 2)
+      if 'total_pc' in item:
+        item['total_pc'] = round(item['total_pc'], 2)
+      if 'total_qty' in item:
+        item['total_qty'] = round(item['total_qty'], 2)
+      if 'total_hl' in item:
+        item['total_hl'] = round(item['total_hl'], 2)
+      results.append(item)
+    return results
+
+  def _group_kpi_name(self, collections):
+    grouped_results = defaultdict(list)
+    grouped_by_created_at = dict()
+    for item in collections:
+      kpi_name = self.kpi_name
+      created_at = item['created_at']
+      if created_at not in grouped_by_created_at:
+        grouped_by_created_at[created_at] = defaultdict(list)
+      grouped_by_created_at[created_at][kpi_name].append(item)
+      grouped_results = grouped_by_created_at
+    return grouped_results
+    
   def _add_structure_per_group(self, grouped_results):
     collections = []
-    for item in grouped_results:
-      collection = self._create_collection(item)
+    for grouper in grouped_results:
+      collection = self._create_collection(grouped_results, grouper)
       collections.append(collection)
     return collections
 
-  def _create_collection(self, item):
+  def _create_collection(self, grouped_results, date):
     collection = {
-      "etl_data": item,
+      "etl_data": grouped_results[date],
       "etl_meta": {
-        "timestamp": item['created_at'],
+        "timestamp": date,
         "label": self.name,
         "is_kpi": self.is_kpi,
         "datatype": self.datatype,
@@ -95,8 +116,6 @@ class OutputFormatter():
       }
     }
     return collection
-
-  
 
   def generate_message(self):
     message = "===========================================\n\n"

@@ -5,6 +5,9 @@ from utils.system_configurer import SystemConfigurer
 from utils.system_exiter import SystemExiter
 from utils.args_parser import ArgsParser
 from utils.etl_execution_info import ETLExecutionInfo
+from utils.writer import Writer
+from utils.log import Log
+
 from mysql.jobs_loader import JobsLoader
 from mysql.jobs_manager import JobsManager
 from mysql.mysql_connection import MysqlConnection
@@ -23,7 +26,7 @@ class Run:
 
     transform_execution_data = None
     if self.args.transform:
-        transform_execution_data = self._execute_transform()
+      transform_execution_data = self._execute_transform()
 
   def _execute_transform(self):
     execution_info = ETLExecutionInfo("TRANSFORM")
@@ -31,6 +34,11 @@ class Run:
     job_manager = JobsManager(loaded_jobs)
     results = job_manager.run()
     results = PosProcessor.Instance().run(results)
+    Writer.Instance().run(results)
+    execution_info.end()
+    Log.Instance().appendFinalReport("[TRANSFORM executed in: " +
+                                     str(execution_info.execution_data['value']) + " minutes ]")
+    return execution_info.execution_data
     
 ### main part
 if __name__ == "__main__":

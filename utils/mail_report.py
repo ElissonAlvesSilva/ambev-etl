@@ -53,7 +53,7 @@ class MailReport:
         return message
 
     def _send_mail(self, message, toaddrs, title_label):
-        fromaddr = 'news@linx3.com'
+        fromaddr = 'nossilesilva@gmail.com'
 
         msg = MIMEMultipart('alternative')
         title_temp = self.title
@@ -65,8 +65,8 @@ class MailReport:
         msg.attach(part1)
           
         # Credentials (if needed)  
-        username = 'news@linx3.com'
-        password = '4chaos1order?'
+        username = 'nossilesilva@gmail.com'
+        password = 'Elisson1234#@'
           
         # The actual mail send
         server = smtplib.SMTP('smtp.gmail.com:587')  

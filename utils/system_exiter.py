@@ -20,6 +20,6 @@ class SystemExiter:
         message = "\n<<<<<ERROR!>>>>>\n\n"+message
         Log.Instance().appendFinalReport(message)
         Log.Instance().save(success=False)
-        if Config.SEND_REPORT:
-            MailReport.Instance().run(message, " - FAILED")
+        # if Config.SEND_REPORT:
+            # MailReport.Instance().run(message, " - FAILED")
         os._exit(1)

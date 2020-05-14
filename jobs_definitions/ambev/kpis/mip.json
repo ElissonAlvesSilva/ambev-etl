@@ -7,7 +7,7 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, created_at, SUM(value_obj) as total_spent
+        user, created_at, SUM(value_obj) as total
       FROM
         {source_mip}
       GROUP BY
@@ -23,7 +23,7 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, created_at, SUM(qty_amount) as total_amount
+        user, created_at, SUM(qty_amount) as total
       FROM
         {source_mip}
       GROUP BY
