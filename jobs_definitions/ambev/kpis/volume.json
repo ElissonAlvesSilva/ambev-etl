@@ -1,21 +1,25 @@
 [
   {
-    "name" : "top_kernel_production",
-    "kpi_name": "topKernelProduction",
+    "name" : "top_kernel_production_per_product",
+    "kpi_name": "topKernelProductionPerProduct",
     "api": "ambev-volume",
     "datatype": "rawdata",
     "previous_jobs" : ["source_volume"],
     "query": "
       SELECT 
         kernel,
+        product,
+        um,
         created_at,
         SUM(volume_pc) AS total_pc,
         SUM(qty_amount) AS total_qty,
         SUM(volume_hl) AS total_hl
       FROM 
-        {source_volume}
+        ambev_etl_source_volume_temp
       GROUP BY
         kernel,
+        product,
+        um,
         created_at
     "
   },
@@ -29,6 +33,7 @@
       SELECT 
         kernel,
         line,
+        um,
         created_at,
         SUM(volume_pc) AS total_pc,
         SUM(qty_amount) AS total_qty,
@@ -38,6 +43,7 @@
         GROUP BY
         kernel,
         line,
+        um,
         created_at
     "
   },
@@ -50,12 +56,14 @@
     "query": "
       SELECT 
         product,
+        um,
         created_at,
         SUM(qty_amount) AS total_qty
       FROM 
         {source_volume}
       GROUP BY
         product,
+        um,
         created_at
     "
   }

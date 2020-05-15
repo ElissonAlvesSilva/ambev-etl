@@ -34,13 +34,10 @@ class OutputFormatter():
   def _remove_none(self, collection):
     results = []
     for item in collection:
-      result = {}
       for k,v in item.items():
         if v == None:
-          result[k] = 'null'
-        else:
-          result[k] = v
-        results.append(result)
+          item[k] = 'null'
+      results.append(item)
     return results
 
   def _add_date_field(self, collection):

@@ -37,7 +37,7 @@ class Config:
 
   AMBEV_API = {
     'urls': {
-        'dev': '',
+        'dev': 'http://localhost:4001/ambevapi',
         'prod': ''
     },
     'auth': {'user': '', 'pwd': ''},
