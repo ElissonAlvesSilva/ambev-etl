@@ -17,7 +17,7 @@ class ETLExecutionInfo:
         end_execution = datetime.now()
         elapsed_minutes = self._calculate_elapsed_minutes(self.start_execution, end_execution)
         self.execution_data = {'value': elapsed_minutes, 
-                        'client': 'linx',
+                        'client': 'ambev',
                         'start-execution': self.start_execution.strftime("%Y-%m-%dT%H:%M:%S"),
                         'end-execution': end_execution.strftime("%Y-%m-%dT%H:%M:%S"),
                         'etlphase': self.etlphase,
