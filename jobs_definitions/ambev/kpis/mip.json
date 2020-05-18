@@ -7,10 +7,13 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, material, description, created_at, SUM(value_obj) as total
+        kernel, cost_center, cost_control, user, material, description, created_at, SUM(value_obj) as total
       FROM
         {source_mip}
       GROUP BY
+        kernel,
+        cost_center,
+        cost_control, 
         user,
         material,
         description, 
@@ -25,10 +28,13 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, material, description, uml, created_at, SUM(qty_amount) as total
+        kernel, cost_center, cost_control, user, material, description, uml, created_at, SUM(qty_amount) as total
       FROM
         {source_mip}
       GROUP BY
+        kernel,
+        cost_center,
+        cost_control, 
         user,
         material,
         description,
@@ -44,12 +50,15 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, created_at, COUNT(material) as total
+        kernel, cost_center, cost_control, user, created_at, COUNT(material) as total
       FROM
         ambev_etl_source_mip_temp
       WHERE 
         material IS NULL
       GROUP BY
+        kernel,
+        cost_center,
+        cost_control, 
         user,
         created_at
     "
@@ -62,13 +71,13 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        material, description, uml, created_at, COUNT(material) as total
+        kernel, cost_center, cost_control, material, description, uml, created_at, COUNT(material) as total
       FROM
         {source_mip}
       WHERE 
         material IS NOT NULL
       GROUP BY
-        material, description, uml, created_at
+        kernel, cost_center, cost_control, material, description, uml, created_at
     "
   },
   {
@@ -79,10 +88,13 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        material, description, uml, created_at, SUM(value_obj) as total
+        kernel, cost_center, cost_control, material, description, uml, created_at, SUM(value_obj) as total
       FROM
         {source_mip}
       GROUP BY
+        kernel,
+        cost_center,
+        cost_control, 
         material,
         description, 
         uml,
@@ -97,10 +109,13 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        material, description, uml, created_at, SUM(qty_amount) as total
+        kernel, cost_center, cost_control, material, description, uml, created_at, SUM(qty_amount) as total
       FROM
         {source_mip}
       GROUP BY
+        kernel,
+        cost_center,
+        cost_control, 
         material,
         description,
         uml,
