@@ -39,14 +39,14 @@
   {
     "name": "insert_volume",
     "action": "insert",
-    "schema": "(kernel, line, version, created_at, product, volume_pc, um, qty_amount, volume_hl, resource)",
+    "schema": "(kernel, line, version, created_at, product, description, volume_pc, um, qty_amount, volume_hl, resource)",
     "table_name": "volume_base",
     "query": "
       SELECT 
-        kernel, line, version, created_at, product, volume_pc, um, qty_amount, volume_hl, resource
+        kernel, line, version, created_at, product, description, volume_pc, um, qty_amount, volume_hl, resource
       FROM (
         SELECT
-          k.key AS kernel, v.line, v.version, v.created_at, p.key AS product, v.volume_pc,
+          k.key AS kernel, v.line, v.version, v.created_at, p.key AS product, p.name AS description, v.volume_pc,
           v.um, v.qty_amount, v.volume_hl, v.resource
         FROM 
           volume AS v

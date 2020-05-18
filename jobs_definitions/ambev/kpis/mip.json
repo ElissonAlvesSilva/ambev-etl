@@ -7,11 +7,13 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, created_at, SUM(value_obj) as total
+        user, material, description, created_at, SUM(value_obj) as total
       FROM
         {source_mip}
       GROUP BY
         user,
+        material,
+        description, 
         created_at
     "
   },
@@ -23,11 +25,13 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        user, uml, created_at, SUM(qty_amount) as total
+        user, material, description, uml, created_at, SUM(qty_amount) as total
       FROM
         {source_mip}
       GROUP BY
         user,
+        material,
+        description,
         uml,
         created_at
     "
@@ -58,13 +62,13 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        material, uml, created_at, COUNT(material) as total
+        material, description, uml, created_at, COUNT(material) as total
       FROM
         {source_mip}
       WHERE 
         material IS NOT NULL
       GROUP BY
-        material, uml, created_at
+        material, description, uml, created_at
     "
   },
   {
@@ -75,11 +79,12 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        material, uml, created_at, SUM(value_obj) as total
+        material, description, uml, created_at, SUM(value_obj) as total
       FROM
         {source_mip}
       GROUP BY
         material,
+        description, 
         uml,
         created_at
     "
@@ -92,11 +97,12 @@
     "previous_jobs" : ["source_mip"],
     "query": "
       SELECT 
-        material, uml, created_at, SUM(qty_amount) as total
+        material, description, uml, created_at, SUM(qty_amount) as total
       FROM
         {source_mip}
       GROUP BY
         material,
+        description,
         uml,
         created_at
     "

@@ -9,6 +9,7 @@
       SELECT 
         kernel,
         product,
+        description,
         um,
         created_at,
         SUM(volume_pc) AS total_pc,
@@ -19,6 +20,7 @@
       GROUP BY
         kernel,
         product,
+        description,
         um,
         created_at
     "
@@ -33,6 +35,7 @@
       SELECT 
         kernel,
         line,
+        description,
         um,
         created_at,
         SUM(volume_pc) AS total_pc,
@@ -40,8 +43,9 @@
         SUM(volume_hl) AS total_hl
       FROM 
         {source_volume}
-        GROUP BY
+      GROUP BY
         kernel,
+        description,
         line,
         um,
         created_at
@@ -54,15 +58,51 @@
     "datatype": "rawdata",
     "previous_jobs" : ["source_volume"],
     "query": "
-      SELECT 
+      SELECT
+        kernel,
+        line,
         product,
+        description,
         um,
         created_at,
-        SUM(qty_amount) AS total_qty
+        SUM(volume_pc) AS total_pc,
+        SUM(qty_amount) AS total_qty,
+        SUM(volume_hl) AS total_hl
+      FROM 
+        ambev_etl_source_volume_temp
+      GROUP BY
+        kernel,
+        line,
+        product,
+        description,
+        um,
+        created_at
+    "
+  },
+  {
+    "name" : "top_produced_products_per_line",
+    "kpi_name": "topProducedProductsPerLine",
+    "api": "ambev-volume",
+    "datatype": "rawdata",
+    "previous_jobs" : ["source_volume"],
+    "query": "
+      SELECT 
+        kernel,
+        product,
+        description,
+        line,
+        um,
+        created_at,
+        SUM(volume_pc) AS total_pc,
+        SUM(qty_amount) AS total_qty,
+        SUM(volume_hl) AS total_hl
       FROM 
         {source_volume}
       GROUP BY
+        kernel,
+        line,        
         product,
+        description,
         um,
         created_at
     "
