@@ -91,7 +91,7 @@
   },
   {
     "name" : "qty_total_per_material",
-    "kpi_name": "QuantityTotalPerMaterial",
+    "kpi_name": "quantityTotalPerMaterial",
     "api": "ambev-mip",
     "datatype": "rawdata",
     "previous_jobs" : ["source_mip"],
