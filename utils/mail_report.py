@@ -66,7 +66,7 @@ class MailReport:
           
         # Credentials (if needed)  
         username = 'nossilesilva@gmail.com'
-        password = 'Elisson1234#@'
+        password = ''
           
         # The actual mail send
         server = smtplib.SMTP('smtp.gmail.com:587')  
