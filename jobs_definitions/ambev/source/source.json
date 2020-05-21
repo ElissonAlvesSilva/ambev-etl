@@ -3,13 +3,13 @@
       "name": "insert_mip",
       "action": "insert",
       "table_name": "mip_base",
-      "schema": "(doc, kernel, user, material, description, uml, cost_center, cost_control, qty_amount, value_obj, created_at)",
+      "schema": "(doc, kernel, user, material_id, material, description, uml, cost_center, cost_control, qty_amount, value_obj, created_at)",
       "query": "
         SELECT
-          doc, kernel, user, material, description, uml, cost_center, cost_control, qty_amount, value_obj, created_at
+          doc, kernel, user, material_id, material, description, uml, cost_center, cost_control, qty_amount, value_obj, created_at
         FROM (
-          SELECT m.doc AS doc, k.key AS kernel, u.key AS user, mt.key AS material, mt.description AS description,
-          (CASE WHEN m.material_id IS NULL THEN 'SV' ELSE mt.uml END) as uml,
+          SELECT m.doc AS doc, k.key AS kernel, u.key AS user, mt.id AS material_id, mt.key AS material, mt.description AS description,
+          (CASE WHEN m.material_id IS NULL THEN 'SV' ELSE mt.uml_sap END) as uml,
           cc.key AS cost_center, m.cost_control AS cost_control, m.qty_amount, m.value_obj, m.created_at
           FROM
             mip as m
@@ -39,15 +39,15 @@
   {
     "name": "insert_volume",
     "action": "insert",
-    "schema": "(kernel, line, version, created_at, product, description, volume_pc, um, qty_amount, volume_hl, resource)",
+    "schema": "(kernel, line, version, created_at, product, description, volume_pc, um, qty_amount, volume_hl, resource, category)",
     "table_name": "volume_base",
     "query": "
       SELECT 
-        kernel, line, version, created_at, product, description, volume_pc, um, qty_amount, volume_hl, resource
+        kernel, line, version, created_at, product, description, volume_pc, um, qty_amount, volume_hl, resource, category
       FROM (
         SELECT
           k.key AS kernel, v.line, v.version, v.created_at, p.key AS product, p.name AS description, v.volume_pc,
-          v.um, v.qty_amount, v.volume_hl, v.resource
+          v.um, v.qty_amount, v.volume_hl, v.resource, p.category
         FROM 
           volume AS v
         INNER JOIN 
@@ -58,7 +58,6 @@
           products AS p
         ON
           v.product_id = p.id
-        
         WHERE
           v.created_at >= '{start_date}' AND
           v.created_at <= '{end_date}'
